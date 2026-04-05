@@ -1,0 +1,8 @@
+node_modules
+frontend/dist
+tsp-output
+test-results
+e2e
+.git
+.github
+*.md
