@@ -255,52 +255,52 @@ export function BookingPage() {
     }
 
     return (
-      <Stack gap="xs">
-        <Title order={4}>Статус слотов</Title>
-        {slots.map((slot) => {
-          const start = dayjs(slot.startTime).format('HH:mm');
-          const end = dayjs(slot.endTime).format('HH:mm');
-          const isSelected = selectedSlot?.startTime === slot.startTime;
-          const isPast = dayjs(slot.startTime).isBefore(now);
-          return (
-            <UnstyledButton
-              key={slot.startTime}
-              onClick={() => {
-                if (isPast) return;
-                if (slot.available) setSelectedSlot(slot);
-              }}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '10px 16px',
-                borderRadius: 8,
-                border: isSelected
-                  ? '2px solid #fd7e14'
-                  : '1px solid #dee2e6',
-                background: isSelected ? '#fff4e6' : 'white',
-                cursor: slot.available && !isPast ? 'pointer' : 'default',
-                opacity: isPast ? 0.5 : slot.available ? 1 : 0.7,
-              }}
-            >
-              <Text size="sm">
-                {start} - {end}
-              </Text>
-              {!isPast && (
-                <Badge
-                  color={slot.available ? 'gray' : 'red'}
-                  variant="light"
-                >
-                  {slot.available ? 'Свободно' : 'Занято'}
-                </Badge>
-              )}
-            </UnstyledButton>
-          );
-        })}
-        <Group justify="space-between" mt="md">
-          <Button variant="default" onClick={handleBack}>
-            Назад
-          </Button>
+      <Stack gap={0} style={{ height: '100%' }}>
+        <Title order={4} mb="xs">Статус слотов</Title>
+        <Stack gap="xs" style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          {slots.map((slot) => {
+            const start = dayjs(slot.startTime).format('HH:mm');
+            const end = dayjs(slot.endTime).format('HH:mm');
+            const isSelected = selectedSlot?.startTime === slot.startTime;
+            const isPast = dayjs(slot.startTime).isBefore(now);
+            return (
+              <UnstyledButton
+                key={slot.startTime}
+                onClick={() => {
+                  if (isPast) return;
+                  if (slot.available) setSelectedSlot(slot);
+                }}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '10px 16px',
+                  borderRadius: 8,
+                  border: isSelected
+                    ? '2px solid #fd7e14'
+                    : '1px solid #dee2e6',
+                  background: isSelected ? '#fff4e6' : 'white',
+                  cursor: slot.available && !isPast ? 'pointer' : 'default',
+                  opacity: isPast ? 0.5 : slot.available ? 1 : 0.7,
+                  flexShrink: 0,
+                }}
+              >
+                <Text size="sm">
+                  {start} - {end}
+                </Text>
+                {!isPast && (
+                  <Badge
+                    color={slot.available ? 'gray' : 'red'}
+                    variant="light"
+                  >
+                    {slot.available ? 'Свободно' : 'Занято'}
+                  </Badge>
+                )}
+              </UnstyledButton>
+            );
+          })}
+        </Stack>
+        <Group justify="flex-end" mt="md" style={{ flexShrink: 0 }}>
           <Button
             color="orange"
             disabled={!selectedSlot}
@@ -456,7 +456,7 @@ export function BookingPage() {
           </Card>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 4 }}>
-          <Card withBorder radius="md" padding="md">
+          <Card withBorder radius="md" padding="md" style={{ height: 420, display: 'flex', flexDirection: 'column' }}>
             {renderSlots()}
           </Card>
         </Grid.Col>
