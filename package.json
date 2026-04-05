@@ -1,0 +1,19 @@
+{
+  "name": "ai-for-developers-project-386",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/p7161/ai-for-developers-project-386/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/p7161/ai-for-developers-project-386/actions)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@typespec/compiler": "^0.62.0",
+    "@typespec/http": "^0.62.0",
+    "@typespec/openapi": "^0.62.0",
+    "@typespec/openapi3": "^0.62.0",
+    "@typespec/rest": "^0.62.0"
+  }
+}
