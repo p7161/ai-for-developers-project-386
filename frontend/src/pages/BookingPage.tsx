@@ -448,19 +448,23 @@ export function BookingPage() {
           <Loader />
         </Center>
       )}
-      <Grid>
-        <Grid.Col span={{ base: 12, md: 3 }}>{renderInfo()}</Grid.Col>
-        <Grid.Col span={{ base: 12, md: 5 }}>
-          <Card withBorder radius="md" padding="md">
+      <Box style={{ display: 'flex', gap: 16, height: 520 }}>
+        <Box style={{ flex: '0 0 25%', display: 'flex' }}>
+          <Card withBorder radius="md" padding="md" style={{ flex: 1, overflow: 'auto' }}>
+            {renderInfo()}
+          </Card>
+        </Box>
+        <Box style={{ flex: '0 0 42%', display: 'flex' }}>
+          <Card withBorder radius="md" padding="md" style={{ flex: 1, overflow: 'auto' }}>
             {renderCalendar()}
           </Card>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4 }}>
-          <Card withBorder radius="md" padding="md" style={{ height: 420, display: 'flex', flexDirection: 'column' }}>
+        </Box>
+        <Box style={{ flex: 1, display: 'flex', minWidth: 0 }}>
+          <Card withBorder radius="md" padding="md" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             {renderSlots()}
           </Card>
-        </Grid.Col>
-      </Grid>
+        </Box>
+      </Box>
     </Container>
   );
 }
