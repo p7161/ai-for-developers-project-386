@@ -36,21 +36,37 @@ publicRouter.get("/calendar", (req, res) => {
     const date = `${year}-${String(mon).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     const dateObj = new Date(year, mon - 1, day);
 
-    // Skip past dates and weekends
-    if (dateObj < today || dateObj.getDay() === 0 || dateObj.getDay() === 6) {
+    // Skip past dates
+    if (dateObj < today) {
       result.push({ date, freeSlots: 0 });
       continue;
     }
 
-    const totalSlots = ((DAY_END_HOUR - DAY_START_HOUR) * 60) / SLOT_DURATION_MINUTES;
-    const dayStart = new Date(year, mon - 1, day, DAY_START_HOUR).toISOString();
+    const now = new Date();
+    const isToday = dateObj.getTime() === today.getTime();
+
+    // For today, only count future slots
+    const effectiveStart = isToday && now > new Date(year, mon - 1, day, DAY_START_HOUR)
+      ? now
+      : new Date(year, mon - 1, day, DAY_START_HOUR);
+
+    // Count total available (future) slots
+    let totalFutureSlots = 0;
+    for (let hour = DAY_START_HOUR; hour < DAY_END_HOUR; hour++) {
+      for (let min = 0; min < 60; min += SLOT_DURATION_MINUTES) {
+        const slotStart = new Date(year, mon - 1, day, hour, min);
+        if (slotStart >= effectiveStart) totalFutureSlots++;
+      }
+    }
+
+    const dayStart = effectiveStart.toISOString();
     const dayEnd = new Date(year, mon - 1, day, DAY_END_HOUR).toISOString();
 
     const bookedCount = db
       .prepare("SELECT COUNT(*) as cnt FROM bookings WHERE start_time >= ? AND start_time < ?")
       .get(dayStart, dayEnd).cnt;
 
-    result.push({ date, freeSlots: totalSlots - bookedCount });
+    result.push({ date, freeSlots: Math.max(0, totalFutureSlots - bookedCount) });
   }
 
   res.json(result);
@@ -66,10 +82,22 @@ publicRouter.get("/slots", (req, res) => {
   const [year, mon, day] = date.split("-").map(Number);
   const slots = [];
 
+  const now = new Date();
+
   for (let hour = DAY_START_HOUR; hour < DAY_END_HOUR; hour++) {
     for (let min = 0; min < 60; min += SLOT_DURATION_MINUTES) {
       const startTime = new Date(year, mon - 1, day, hour, min);
       const endTime = new Date(startTime.getTime() + SLOT_DURATION_MINUTES * 60 * 1000);
+
+      // Slot is in the past
+      if (startTime < now) {
+        slots.push({
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+          available: false,
+        });
+        continue;
+      }
 
       const booked = db
         .prepare("SELECT COUNT(*) as cnt FROM bookings WHERE start_time = ?")

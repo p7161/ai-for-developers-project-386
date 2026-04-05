@@ -243,6 +243,17 @@ export function BookingPage() {
         </Center>
       );
     }
+    const now = dayjs();
+    const allPast = slots.length > 0 && slots.every((s) => dayjs(s.startTime).isBefore(now));
+
+    if (allPast) {
+      return (
+        <Text c="dimmed" ta="center">
+          Выберите актуальную время и дату
+        </Text>
+      );
+    }
+
     return (
       <Stack gap="xs">
         <Title order={4}>Статус слотов</Title>
@@ -250,10 +261,14 @@ export function BookingPage() {
           const start = dayjs(slot.startTime).format('HH:mm');
           const end = dayjs(slot.endTime).format('HH:mm');
           const isSelected = selectedSlot?.startTime === slot.startTime;
+          const isPast = dayjs(slot.startTime).isBefore(now);
           return (
             <UnstyledButton
               key={slot.startTime}
-              onClick={() => slot.available && setSelectedSlot(slot)}
+              onClick={() => {
+                if (isPast) return;
+                if (slot.available) setSelectedSlot(slot);
+              }}
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -264,19 +279,21 @@ export function BookingPage() {
                   ? '2px solid #fd7e14'
                   : '1px solid #dee2e6',
                 background: isSelected ? '#fff4e6' : 'white',
-                cursor: slot.available ? 'pointer' : 'default',
-                opacity: slot.available ? 1 : 0.7,
+                cursor: slot.available && !isPast ? 'pointer' : 'default',
+                opacity: isPast ? 0.5 : slot.available ? 1 : 0.7,
               }}
             >
               <Text size="sm">
                 {start} - {end}
               </Text>
-              <Badge
-                color={slot.available ? 'gray' : 'red'}
-                variant="light"
-              >
-                {slot.available ? 'Свободно' : 'Занято'}
-              </Badge>
+              {!isPast && (
+                <Badge
+                  color={slot.available ? 'gray' : 'red'}
+                  variant="light"
+                >
+                  {slot.available ? 'Свободно' : 'Занято'}
+                </Badge>
+              )}
             </UnstyledButton>
           );
         })}

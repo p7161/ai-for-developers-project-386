@@ -13,10 +13,11 @@ function generateSlots(date: string): Slot[] {
       const booked = bookings.some(
         (b) => b.startTime === start.toISOString(),
       );
+      const isPast = start.isBefore(dayjs());
       slots.push({
         startTime: start.toISOString(),
         endTime: end.toISOString(),
-        available: !booked,
+        available: isPast ? false : !booked,
       });
     }
   }
