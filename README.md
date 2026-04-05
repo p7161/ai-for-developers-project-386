@@ -11,6 +11,7 @@
 |------|-----------|
 | API-контракт | TypeSpec -> OpenAPI 3.0 |
 | Фронтенд | React, TypeScript, Vite, Mantine UI |
+| Бэкенд | Node.js, Express, better-sqlite3 (in-memory) |
 | Mock-сервер | Stoplight Prism / встроенный in-memory mock |
 
 ## Структура проекта
@@ -19,6 +20,15 @@
 .
 ├── main.tsp                        # TypeSpec-описание API
 ├── tsp-output/@typespec/openapi3/  # Сгенерированная OpenAPI-спецификация
+├── backend/                        # Бэкенд-приложение
+│   ├── src/
+│   │   ├── index.js                # Точка входа, Express-сервер
+│   │   ├── db.js                   # SQLite in-memory база данных
+│   │   └── routes/
+│   │       ├── eventTypes.js       # CRUD типов событий
+│   │       ├── bookings.js         # Список бронирований (owner)
+│   │       └── public.js           # Гостевое API
+│   └── package.json
 └── frontend/                       # Фронтенд-приложение
     ├── src/
     │   ├── api/
@@ -46,8 +56,12 @@
 # Корень проекта (TypeSpec)
 npm install
 
+# Бэкенд
+cd backend
+npm install
+
 # Фронтенд
-cd frontend
+cd ../frontend
 npm install
 ```
 
@@ -59,7 +73,22 @@ npx tsp compile .
 
 Результат появится в `tsp-output/@typespec/openapi3/openapi.yaml`.
 
-### 3. Запуск фронтенда
+### 3. Запуск бэкенда
+
+```bash
+cd backend
+npm start
+```
+
+Сервер запустится на `http://localhost:3000`. Данные хранятся в SQLite in-memory — после перезапуска сбрасываются.
+
+Для разработки с автоматическим перезапуском при изменении файлов:
+
+```bash
+npm run dev
+```
+
+### 4. Запуск фронтенда
 
 ```bash
 cd frontend
@@ -70,7 +99,7 @@ npm run dev
 
 По умолчанию используется встроенный in-memory mock — все данные хранятся в памяти браузера и сбрасываются при перезагрузке. Бэкенд не нужен.
 
-### 4. Запуск с Prism (опционально)
+### 5. Запуск с Prism (опционально)
 
 Если нужно тестировать против OpenAPI-спецификации через Prism:
 
@@ -90,6 +119,7 @@ Prism поднимется на `http://localhost:4010`, Vite проксируе
 
 | Переменная | Значение по умолчанию | Описание |
 |---|---|---|
+| `PORT` | `3000` | Порт бэкенд-сервера |
 | `VITE_USE_MOCK` | `true` | `false` — использовать реальный API (Prism / бэкенд) |
 
 ## Сборка
