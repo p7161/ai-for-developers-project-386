@@ -4,7 +4,8 @@
   "description": "[![Actions Status](https://github.com/p7161/ai-for-developers-project-386/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/p7161/ai-for-developers-project-386/actions)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed"
   },
   "keywords": [],
   "author": "",
@@ -15,5 +16,8 @@
     "@typespec/openapi": "^0.62.0",
     "@typespec/openapi3": "^0.62.0",
     "@typespec/rest": "^0.62.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
   }
 }
