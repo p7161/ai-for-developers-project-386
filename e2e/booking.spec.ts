@@ -151,23 +151,21 @@ test.describe('Past dates are inactive', () => {
     await expect(badgesInPastMonth).toHaveCount(0);
   });
 
-  // BUG: backend /api/public/slots does not check if date is in the past,
-  // returns available: true for past slots. Fix needed in backend/src/routes/public.js
-  test.fail('past date slots are all marked as "Занято"', async ({ page }) => {
+  test('past date shows message to pick a valid date instead of slots', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByText('Календарь')).toBeVisible();
 
     // Navigate to previous month
     await page.getByRole('button', { name: '←' }).click();
 
-    // Click on day 15 of the past month (guaranteed to be in-month, likely a weekday)
+    // Click on day 15 of the past month
     const dayCell = page.getByRole('button', { name: '15', exact: true });
     await dayCell.click();
 
-    // Slots panel should appear
-    await expect(page.getByText('Статус слотов')).toBeVisible();
+    // Frontend should show a message instead of slot list
+    await expect(page.getByText('Выберите актуальную время и дату')).toBeVisible();
 
-    // All slots for a past date must be "Занято", none should be "Свободно"
+    // No free slots should be shown
     const freeSlots = page.getByRole('button').filter({ hasText: 'Свободно' });
     await expect(freeSlots).toHaveCount(0);
   });
