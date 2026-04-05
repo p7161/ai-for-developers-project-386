@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Title,
-  Grid,
   Card,
   Text,
   Stack,
@@ -361,10 +360,14 @@ export function BookingPage() {
         <Title order={2} mb="xl">
           Запись на звонок
         </Title>
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 5 }}>{renderInfo()}</Grid.Col>
-          <Grid.Col span={{ base: 12, md: 7 }}>
-            <Card withBorder radius="md" padding="xl" bg="#f8f9fa">
+        <Box style={{ display: 'flex', gap: 16, height: 520 }}>
+          <Box style={{ flex: '0 0 42%', display: 'flex' }}>
+            <Card withBorder radius="md" padding="md" style={{ flex: 1, overflow: 'auto' }}>
+              {renderInfo()}
+            </Card>
+          </Box>
+          <Box style={{ flex: 1, display: 'flex', minWidth: 0 }}>
+            <Card withBorder radius="md" padding="xl" bg="#f8f9fa" style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <Stack align="center" gap="lg">
                 <Title order={3} ta="center">
                   Бронь подтверждена. До встречи!
@@ -379,8 +382,8 @@ export function BookingPage() {
                 </Button>
               </Stack>
             </Card>
-          </Grid.Col>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
     );
   }
@@ -391,11 +394,15 @@ export function BookingPage() {
         <Title order={2} mb="xl">
           Запись на звонок
         </Title>
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 5 }}>{renderInfo()}</Grid.Col>
-          <Grid.Col span={{ base: 12, md: 7 }}>
-            <Card withBorder radius="md" padding="xl" bg="#f8f9fa">
-              <Stack gap="md">
+        <Box style={{ display: 'flex', gap: 16, height: 520 }}>
+          <Box style={{ flex: '0 0 42%', display: 'flex' }}>
+            <Card withBorder radius="md" padding="md" style={{ flex: 1, overflow: 'auto' }}>
+              {renderInfo()}
+            </Card>
+          </Box>
+          <Box style={{ flex: 1, display: 'flex', minWidth: 0 }}>
+            <Card withBorder radius="md" padding="xl" bg="#f8f9fa" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <Stack gap="md" style={{ flex: 1 }}>
                 <Title order={4}>Ваши данные</Title>
                 <TextInput
                   label="Имя"
@@ -417,23 +424,23 @@ export function BookingPage() {
                     {error}
                   </Alert>
                 )}
-                <Group justify="space-between">
-                  <Button variant="default" onClick={handleBack}>
-                    Назад
-                  </Button>
-                  <Button
-                    color="orange"
-                    loading={submitting}
-                    disabled={!guestName || !guestEmail}
-                    onClick={handleSubmit}
-                  >
-                    Забронировать
-                  </Button>
-                </Group>
               </Stack>
+              <Group justify="space-between" mt="md" style={{ flexShrink: 0 }}>
+                <Button variant="default" onClick={handleBack}>
+                  Назад
+                </Button>
+                <Button
+                  color="orange"
+                  loading={submitting}
+                  disabled={!guestName || !guestEmail}
+                  onClick={handleSubmit}
+                >
+                  Забронировать
+                </Button>
+              </Group>
             </Card>
-          </Grid.Col>
-        </Grid>
+          </Box>
+        </Box>
       </Container>
     );
   }
